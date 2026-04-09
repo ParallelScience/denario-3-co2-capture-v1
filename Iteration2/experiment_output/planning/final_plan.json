@@ -1,0 +1,54 @@
+{
+    "sub_tasks": [
+        {
+            "bullet_points": [
+                "Load the dataset and parse chemical formulas to identify metal-oxide precursors and carbonate products.",
+                "Compute total DFT energies per formula unit by multiplying formation_energy_per_atom by nsites.",
+                "Implement a matching algorithm to pair oxide precursors (MxOy) with carbonate products (MaCO3) based on metal identity, documenting the stoichiometric balancing logic used to ensure dimensional consistency.",
+                "Calculate the reaction energy ΔE = E(MaCO3) - E(MxOy) - E(CO2) using the reference energy for CO2 (-11.17 eV).",
+                "Apply the stability filter (energy_above_hull ≤ 0.1 eV/atom) to all participating phases.",
+                "Print a detailed summary table of the number of oxide-carbonate pairs found per metal element (Ca, Mg, Li, Na, K, Ba, Sr, Mn, Fe, Co, Ni, Cu, Zn, Al).",
+                "Save the resulting matched dataset of thermodynamically accessible reaction pairs to disk."
+            ],
+            "sub_task": "Reaction Space Mapping and Thermodynamic Filtering",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Train a Random Forest regressor to predict S298 using structural (volume_A3, density_g_cm3, nsites, crystal_system) and composition features (nelements, formation_energy_per_atom, element fractions).",
+                "Print cross-validation R² and RMSE scores to quantify model reliability.",
+                "Calculate the reaction entropy ΔS = Sproducts - Sreactants - SCO2(gas), where SCO2(gas) = 213.8 J/mol·K.",
+                "Compute the regeneration temperature Treg = ΔH / ΔS (using ΔH ≈ ΔE).",
+                "Print full distribution statistics (mean, median, std, min, max, percentile counts) of Treg before and after the 300–600°C filter.",
+                "Filter for reactions with Treg in the 300–600°C range and ΔS < 0.",
+                "Save the updated dataset containing thermodynamic and regeneration metrics."
+            ],
+            "sub_task": "Entropy Estimation and Regeneration Temperature Calculation",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Calculate the Volume Expansion Ratio (ΔV / Voxide) for each reaction pair.",
+                "Apply the electronic filter (band_gap > 0.5 eV) to exclude metallic phases.",
+                "Print a detailed breakdown of candidate counts eliminated at each filtering stage (hull, band gap, volume expansion, Pareto selection).",
+                "Identify the Pareto-optimal set of materials based on ΔE, Treg, and Volume Expansion Ratio.",
+                "Perform a sensitivity analysis by varying the CO2 reference energy by ±0.1 eV and print the number of candidates whose Pareto membership changes.",
+                "Generate a multi-panel high-resolution PNG containing: (a) ΔE vs. Treg scatter plot, (b) Volume Expansion Ratio box/violin plot by crystal system, (c) 3D Pareto-front scatter plot, and (d) bar chart of Pareto-optimal counts per metal element.",
+                "Save the final candidate list and Pareto-front data."
+            ],
+            "sub_task": "Structural Compatibility, Pareto Optimization, and Visualization",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Interpret the thermodynamic landscape and identify the most promising elemental families for CO₂ capture.",
+                "Discuss the trade-offs between reaction favorability, regeneration temperature, and structural stability.",
+                "Evaluate the impact of the stability and electronic filters on the candidate pool.",
+                "Include a validation subsection cross-referencing computed ΔE and Treg for industrial benchmarks (CaO→CaCO₃ and MgO→MgCO₃) against literature values.",
+                "Synthesize the findings into a comprehensive report, referencing the generated plots and key statistics to validate the methodology."
+            ],
+            "sub_task": "Results Synthesis and Reporting",
+            "sub_task_agent": "researcher"
+        }
+    ]
+}
