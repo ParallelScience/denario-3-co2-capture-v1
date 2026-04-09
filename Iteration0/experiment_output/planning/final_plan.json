@@ -1,0 +1,59 @@
+{
+    "sub_tasks": [
+        {
+            "bullet_points": [
+                "Load the parquet dataset and perform quality checks (remove duplicates, handle missing values).",
+                "Print summary statistics: number of duplicates removed, missing values, total oxide vs. carbonate counts, and number of unique metal compositions.",
+                "Parse chemical formulas to extract metal composition and oxygen content, and calculate total energy per formula unit.",
+                "Implement logic to pair oxide precursors ($M_xO_y$) with corresponding carbonate products ($M_x(CO_3)_z$) based on metal composition and oxygen balance ($y = 2z$).",
+                "Print the number of successfully matched pairs, broken down by metal element.",
+                "Save two datasets: one containing ALL valid pairings and one \"best-pair\" dataset (lowest energy-above-hull representative for each oxide and carbonate)."
+            ],
+            "sub_task": "Data Cleaning, Preprocessing, and Stoichiometric Pairing",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Load the matched pairs datasets.",
+                "Calculate reaction energy $\\Delta E = E(M_x(CO_3)_z) - E(M_xO_y) - z \\times E_{CO_2}$ ($E_{CO_2} = -11.17$ eV) and normalize by $z$.",
+                "Verify and print the number of pairs passing the oxygen balance check ($y=2z$) vs. those that do not, and report metal systems with the most pairs.",
+                "Print detailed summary statistics (mean, median, std, min, max) of normalized $\\Delta E$ per metal element family.",
+                "Generate heatmaps, distribution plots, and box-plots of $\\Delta E$ per metal element to visualize polymorph variability.",
+                "Save the calculated reaction energies and plots to disk."
+            ],
+            "sub_task": "Reaction Energy Calculation and Thermodynamic Landscape Mapping",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Filter candidates for stability: (1) both hull=0, (2) both hull <= 0.05 eV/atom.",
+                "Estimate regeneration temperature $T_{reg} \\approx \\Delta E / \\Delta S$ ($\\Delta S = 213.8$ J/mol·K).",
+                "Rank candidates by $\\Delta E$ and identify \"optimal-delta\" materials (-0.5 to -1.5 eV/CO2).",
+                "Print the full ranked table of optimal-delta candidates (formula, metal, $\\Delta E$, $T_{reg}$, hull values) and save as a CSV.",
+                "Save the stability-filtered subsets to disk."
+            ],
+            "sub_task": "Stability Filtering and Regeneration Temperature Estimation",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Construct a lookup table for elemental descriptors (Pauling electronegativity, atomic radius, ionic radius).",
+                "Compute and print Pearson and Spearman correlation coefficients between $\\Delta E$ and these descriptors.",
+                "Generate summary plots visualizing these correlations.",
+                "Save the final processed dataset and summary statistics to disk."
+            ],
+            "sub_task": "Correlation Analysis and Structural Descriptor Mapping",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Synthesize all quantitative results, thermodynamic trends, and candidate rankings from previous steps.",
+                "Structure the Results section with labeled subsections: Data Overview and Pairing, Reaction Energy Landscape, Stability-Filtered Candidates, and Structural Correlations.",
+                "Explicitly reference all printed numerical results (pair counts, $\\Delta E$ statistics, $T_{reg}$ ranges, correlation coefficients, optimal-delta counts) and saved plot filenames.",
+                "Interpret the relationship between M-O bond chemical potential and carbonation favorability, and discuss industrial implications."
+            ],
+            "sub_task": "Final Results Synthesis and Reporting",
+            "sub_task_agent": "researcher"
+        }
+    ]
+}
