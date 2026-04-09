@@ -1,0 +1,74 @@
+{
+    "sub_tasks": [
+        {
+            "bullet_points": [
+                "Load the parquet dataset and validate formula strings.",
+                "Compute total formation energy per formula unit (formation_energy_per_atom * nsites) and store the metal-atom count separately.",
+                "Define a metal-composition key (e.g., sorted tuple of metal elements and their stoichiometric ratios, excluding O and C) for oxide-carbonate pairing.",
+                "Identify and group oxide-carbonate pairs sharing the same metal-composition key.",
+                "Print summary statistics: number of unique metal-composition keys, number of matched oxides/carbonates, and number of unmatched entries.",
+                "Save the processed, matched dataset to a file."
+            ],
+            "sub_task": "Data Preprocessing and Stoichiometric Parsing",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Calculate the carbonation reaction energy ΔE = E(carbonate) - E(oxide) - E(CO₂) on a per-formula-unit basis, using -11.17 eV for E(CO₂).",
+                "Filter pairs based on the 0.1 eV/atom stability threshold (energy_above_hull).",
+                "For multiple polymorphs sharing the same metal-composition key, compute all pairwise combinations and flag the most stable pair (lowest ΔE).",
+                "Perform sensitivity analysis by perturbing E(CO₂) by ±0.1 eV and save the nominal ΔE values alongside confidence intervals."
+            ],
+            "sub_task": "Thermodynamic Reaction Mapping",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Estimate molar entropy for solid phases using the Neumann-Kopp additive rule with documented reference values (e.g., Ca: 41.6, Mg: 32.7, O: 102.6, C: 5.7 J/mol·K).",
+                "Calculate ΔS_total = (S_carbonate - S_oxide) - S_CO₂(gas), where S_CO₂(gas) ≈ 213.8 J/mol·K.",
+                "Compute T_reg = ΔH / ΔS (using ΔE as a proxy for ΔH) only for pairs where ΔS_total < 0; flag and exclude pairs with positive ΔS_total.",
+                "Save the calculated T_reg values for the candidate list."
+            ],
+            "sub_task": "Entropy and Regeneration Temperature Estimation",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Generate a single multi-panel figure containing: (1) a box-and-whisker/violin plot of ΔE distributions grouped by primary capture metal, (2) a 2D scatter plot of ΔE vs. Stability Penalty colored by metal family, and (3) a histogram of T_reg values overlaid with the 300–600°C industrial target window.",
+                "Save the figure as a high-resolution PNG file."
+            ],
+            "sub_task": "Thermodynamic Landscape and Performance Visualization",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Perform multivariate regression to correlate ΔE with metal electronegativity, ionic radius, and oxidation state using a standardized (z-score normalized) feature matrix.",
+                "Print R² score, regression coefficients with standard errors, and save a parity plot of predicted vs. actual ΔE values.",
+                "Identify isostructural \"near-miss\" candidates for known sorbents and predict their ΔE.",
+                "Save the regression results and the ranked list of potential dopants/substitutions."
+            ],
+            "sub_task": "Design Space and Substitution Analysis",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Define a Feasibility Score (weighted sum of normalized ΔE proximity to optimal window, normalized Stability Penalty, and normalized T_reg proximity to 300–600°C).",
+                "Rank all materials and extract the top 20 candidates.",
+                "Print a formatted table of the top 20 candidates with all component scores.",
+                "Save the final ranked CSV including material_id, formula, primary metal, ΔE, Stability Penalty, T_reg, and Feasibility Score."
+            ],
+            "sub_task": "Feasibility Scoring and Final Candidate Ranking",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Write the full Results section of the paper, structured with subsections: thermodynamic landscape, entropy/T_reg estimation, design space regression, and final candidate ranking.",
+                "Interpret the role of metal identity in carbonation favorability and the impact of the stability penalty on experimental accessibility.",
+                "Evaluate predicted T_reg values against industrial requirements and synthesize findings into a comprehensive report.",
+                "Reference specific numerical outputs and plot descriptions from all prior engineer steps."
+            ],
+            "sub_task": "Results Interpretation and Synthesis",
+            "sub_task_agent": "researcher"
+        }
+    ]
+}
