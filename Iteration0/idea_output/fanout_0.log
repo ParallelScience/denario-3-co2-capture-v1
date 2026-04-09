@@ -1,0 +1,160 @@
+
+###### PROMPT BEGINS ########
+Human: 
+**Role**: Senior Scientific Lead and Peer Reviewer.
+**Objective**: Critically evaluate 10 proposed research ideas and select the single most impactful project to move into the planning phase.
+
+**Evaluation Framework**:
+To determine the "largest scientific impact," you must weigh each idea against the following four pillars:
+1. **Feasibility**: Given the constraints in the 'Data Description,' can this project actually be executed with the available variables?
+2. **Novelty**: Does the idea offer a fresh perspective, or is it a standard, derivative analysis?
+3. **Rigour**: Does the idea suggest a deep investigation into the underlying physics/logic of the data?
+4. **Utility**: Will the results provide actionable insights or significantly enhance our understanding of the system?
+5. The idea selected should be as different as possible to any previous ideas.
+
+**Task**:
+1. Review the proposed 10 research ideas along with any previous ideas.
+2. Review the 'Data Description' to ensure the ideas are physically and statistically grounded.
+3. Select the **one** idea that best balances innovation with scientific feasibility.
+4. The selected idea must contain a title and a description of it.
+
+**Operational Constraints**:
+- Do not provide a list of pros and cons.
+- Do not modify the original text of the idea.
+- Provide **only** the text of the selected idea within the required tags.
+
+Data description:
+# Data Description: CO₂ Capture Materials from the Materials Project
+
+## Overview
+
+This dataset contains DFT-computed properties for 40,923 inorganic materials relevant to solid-sorbent CO₂ capture, drawn from the Materials Project database (April 2026). The materials are oxygen-containing compounds that include at least one element commonly used in CO₂ capture sorbents: Ca, Mg, Li, Na, K, Ba, Sr, Mn, Fe, Co, Ni, Cu, Zn, Al. The dataset spans both oxide precursors (the sorbent before capture) and carbonates (the CO₂-reacted products), enabling thermodynamic screening of capture reactions of the form:
+
+    MₓOᵧ + CO₂ → MₓCO₃ + (byproducts)
+
+All entries are near-thermodynamically-stable (energy above hull ≤ 0.1 eV/atom), meaning they are experimentally accessible candidates rather than hypothetical high-energy phases.
+
+---
+
+## File
+
+### `/home/node/work/projects/co2_capture_v1/co2_capture_materials.parquet`
+
+Parquet file, **40,923 rows × 15 columns**, readable with `pandas.read_parquet(...)` (requires `pyarrow`).
+
+| Column | Type | Description | Range / Notes |
+|---|---|---|---|
+| `material_id` | str | Materials Project ID (e.g. `mp-2341`) | Unique identifier |
+| `formula` | str | Reduced chemical formula (e.g. `CaCO3`, `MgO`) | Human-readable |
+| `elements` | str | Comma-separated list of elements (e.g. `Ca,C,O`) | Split on `,` to get a list |
+| `nelements` | int | Number of distinct elements | 2–8 |
+| `formation_energy_per_atom` | float | DFT formation energy (eV/atom), referenced to elemental standards | [-5.154, 0.002] eV/atom |
+| `energy_above_hull` | float | Thermodynamic stability: distance to convex hull (eV/atom). 0 = on hull (perfectly stable) | [0, 0.1] eV/atom |
+| `band_gap` | float | DFT band gap (eV). 0 = metal | [0, 7.296] eV |
+| `is_metal` | bool | True if band gap = 0 | |
+| `is_stable` | bool | True if energy_above_hull = 0 exactly | 6,479 / 40,923 |
+| `volume_A3` | float | Unit cell volume (Å³) | Per unit cell |
+| `density_g_cm3` | float | Density (g/cm³) | |
+| `nsites` | int | Number of atoms in the unit cell | |
+| `crystal_system` | str | Crystallographic system | Monoclinic (33%), Triclinic (28%), Orthorhombic (16%), Trigonal, Tetragonal, Cubic, Hexagonal |
+| `space_group` | str | Space group symbol (e.g. `P2_1/c`) | |
+| `has_C` | bool | True = carbonate (contains carbon) | 1,790 carbonates, 39,133 oxides |
+
+---
+
+## Data Generating Process
+
+All properties are from DFT calculations using the Vienna Ab initio Simulation Package (VASP) with the PBE generalized gradient approximation (GGA) functional, as run by the Materials Project. Formation energies are corrected using MP's fitted elemental reference energies (GGA/GGA+U mixing scheme). Band gaps from PBE are systematically underestimated by ~30–50% relative to experiment — they are reliable for ranking and classification but not for absolute values.
+
+The convex hull (energy_above_hull) is computed over all MP entries for each chemical system. `is_stable = True` means no known DFT phase is more stable at that composition.
+
+---
+
+## Key Statistics
+
+- *Total entries:* 40,923
+- *Carbonates (has_C=True):* 1,790 — these are CO₂ capture products
+- *Oxides (has_C=False):* 39,133 — these are potential sorbent precursors
+- *Thermodynamically stable (hull=0):* 6,479 (15.8%)
+- *Metals (band_gap=0):* ~4,000
+- *Most frequent capture elements:* Li (13,690), Na (7,439), Mn (7,422), Fe (5,586), Ca (3,600), Mg (3,537)
+
+---
+
+## Known Properties and Caveats
+
+- *No explicit CO₂ capture capacity or kinetics:* The dataset contains thermodynamic ground-state properties only. Actual CO₂ capture performance depends on surface area, porosity, regeneration energy, and reaction kinetics — none of which are in this dataset. Thermodynamic proxies (formation energy differences between oxide and carbonate pairs) are the best available signal.
+- *Band gap underestimation:* PBE systematically underestimates band gaps. Use band_gap as a relative indicator, not an absolute value.
+- *Some entries are polymorphs:* Multiple rows may share the same formula but differ in crystal structure (e.g., multiple FeO entries with different space groups). These are genuinely distinct materials with different properties.
+- *Energy above hull cutoff at 0.1 eV/atom:* This is a standard threshold for "synthesizable" materials. Entries with hull > 0 may still be experimentally accessible as metastable phases (e.g., via low-temperature synthesis or low-temperature synthesis or thin film deposition).
+- *Carbonation reaction energies require pairing:* To compute ΔE_carbonation = E(MₓCO₃) − E(MₓOᵧ) − E(CO₂), you need to match oxide and carbonate rows by chemical system and look up the reference CO₂ energy (approximately −11.17 eV/formula unit in GGA).
+
+---
+
+## Suggested Analyses
+
+1. *Thermodynamic screening of carbonation reactions:* For each oxide in the dataset, find its corresponding carbonate (if present) and compute the reaction energy ΔE = E_carbonate − E_oxide − E_CO₂. Rank materials by favorability of CO₂ uptake. Identify which elemental families (Ca, Mg, Li, Fe…) have the most favorable thermodynamics.
+
+2. *Formation energy prediction:* Train a ML model (gradient boosting or neural network) to predict formation_energy_per_atom from composition features (element fractions, electronegativity, atomic radius) and structural features (crystal system, nsites, density). This is a standard materials informatics benchmark.
+
+3. *Stability classification:* Binary classification: predict is_stable from composition + structure features. Analyze which chemical systems are most likely to sit on the convex hull.
+
+4. *Metal vs. insulator classification:* Predict is_metal from composition. CO₂ sorbents should be insulators or semiconductors for regeneration efficiency — use this to filter candidates.
+
+5. *Carbonate–oxide pairing and reaction energy landscape:* Build a matched dataset of (oxide, carbonate) pairs sharing the same metal composition. Map the reaction energy landscape as a function of metal identity, oxidation state, and crystal system.
+
+6. *Elemental substitution screening:* For known good sorbents (CaO → CaCO₃, MgO → MgCO₃), identify isostructural compounds where Ca/Mg is replaced by other elements and rank them by predicted carbonation energy.
+
+
+Proposed ideas:
+1. **Symmetry-Driven Carbonation Efficiency**
+Does the crystal system (e.g., monoclinic vs. cubic) of an oxide precursor correlate with the thermodynamic favorability of its carbonation reaction? This research seeks to determine if high-symmetry structures provide a distinct energetic advantage or disadvantage during the formation of the carbonate phase.
+
+2. **Electronic Conductivity as a Sorbent Descriptor**
+Can the transition from metallic to insulating behavior during the carbonation reaction be used as a proxy for chemical stability? This study investigates whether the change in band gap across the oxide-to-carbonate reaction serves as an indicator for the reversibility and energy requirements of CO₂ uptake.
+
+3. **Atomic Density and Volumetric Efficiency**
+How does the change in density and molar volume between oxide precursors and their corresponding carbonate products influence the feasibility of long-term cycling? This project aims to identify material pairs that minimize structural expansion to prevent physical degradation of the sorbent over multiple carbonation cycles.
+
+4. **Complexity vs. Stability Landscapes**
+Is there a correlation between the number of distinct chemical elements in a compound and its distance from the convex hull? This research explores whether multi-elemental (high-entropy) oxide precursors offer a wider range of metastable states that could be exploited for tunable carbonation kinetics.
+
+5. **The Role of Transition Metal d-Electrons in Carbonation**
+How do d-block element-containing oxides differ from alkaline earth metal oxides in their carbonation reaction energy distributions? This study focuses on whether transition metal electronic configurations provide unique thermodynamic pathways that deviate from standard alkaline earth carbonation models.
+
+6. **Predictive Mapping of Metastable Sorbent Candidates**
+Can materials with an energy_above_hull between 0.05 and 0.1 eV/atom be systematically identified as "high-activity" sorbents? This objective tests the hypothesis that slightly metastable oxides possess higher surface reactivity, potentially offering lower-temperature CO₂ capture pathways than perfectly stable materials.
+
+7. **Space Group Preference in Carbonate Formation**
+Are specific space groups statistically overrepresented in the set of stable carbonate products? By analyzing the structural symmetry of the 1,790 carbonates, this research aims to identify preferred structural motifs that stabilize the CO₂-reacted state.
+
+8. **Electronegativity Trends in Carbonation Energy**
+To what extent does the average electronegativity of the oxide precursor predict the exothermic nature of the carbonation reaction? This study seeks to establish a universal scaling relationship between precursor composition and the thermodynamic drive for CO₂ absorption.
+
+9. **Polymorph-Dependent Carbonation Thermodynamics**
+For materials with identical chemical formulas but different crystal structures, how large is the variance in predicted carbonation energy? This research aims to quantify how structural isomerism affects the thermodynamic viability of CO₂ capture, potentially uncovering "hidden" high-performance polymorphs.
+
+10. **Elemental Synergies in Multi-Component Sorbents**
+Do specific combinations of elements (e.g., Li-Mg or Fe-Mn) lead to synergistic effects that lower the energy penalty for CO₂ capture compared to single-metal oxides? This project investigates whether complex oxides offer a broader thermodynamic tunability than their simpler counterparts.
+
+
+
+
+
+
+
+Respond in exactly the following format:
+
+\\begin{IDEA}
+<IDEA>
+\\end{IDEA}
+
+In <IDEA>, put the idea you have selected
+
+###### PROMPT ENDS ########
+
+\begin{IDEA}
+**Polymorph-Dependent Carbonation Thermodynamics**
+For materials with identical chemical formulas but different crystal structures, how large is the variance in predicted carbonation energy? This research aims to quantify how structural isomerism affects the thermodynamic viability of CO₂ capture, potentially uncovering "hidden" high-performance polymorphs.
+\end{IDEA}
+
