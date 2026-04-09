@@ -1,0 +1,178 @@
+
+###### PROMPT BEGINS ########
+Human: You are provided with:
+- a description of the data
+- an idea
+- research plan to carry out the idea.
+
+Your task is to provide suggestions on how to improve the plan.
+Take into account and potential feedback (if any).
+If the plan is already good enough, do not give suggestions to improve it. If this is not first iteration, you will also be provided with the previous research plan along with some feedback on it. If this is the case, take into account the feedback provided when designing the new research plan. It is good to have a detailed plan, but not to have an overly complicated plan. If you dont have suggestions, just say that you dont have further suggestions. The idea should remain the same. No need to add code to the research plan, as another agent will write code given the research plan.
+
+Data description:
+# Data Description: CO₂ Capture Materials from the Materials Project
+
+## Overview
+
+This dataset contains DFT-computed properties for 40,923 inorganic materials relevant to solid-sorbent CO₂ capture, drawn from the Materials Project database (April 2026). The materials are oxygen-containing compounds that include at least one element commonly used in CO₂ capture sorbents: Ca, Mg, Li, Na, K, Ba, Sr, Mn, Fe, Co, Ni, Cu, Zn, Al. The dataset spans both oxide precursors (the sorbent before capture) and carbonates (the CO₂-reacted products), enabling thermodynamic screening of capture reactions of the form:
+
+    MₓOᵧ + CO₂ → MₓCO₃ + (byproducts)
+
+All entries are near-thermodynamically-stable (energy above hull ≤ 0.1 eV/atom), meaning they are experimentally accessible candidates rather than hypothetical high-energy phases.
+
+---
+
+## File
+
+### `/home/node/work/projects/co2_capture_v1/co2_capture_materials.parquet`
+
+Parquet file, **40,923 rows × 15 columns**, readable with `pandas.read_parquet(...)` (requires `pyarrow`).
+
+| Column | Type | Description | Range / Notes |
+|---|---|---|---|
+| `material_id` | str | Materials Project ID (e.g. `mp-2341`) | Unique identifier |
+| `formula` | str | Reduced chemical formula (e.g. `CaCO3`, `MgO`) | Human-readable |
+| `elements` | str | Comma-separated list of elements (e.g. `Ca,C,O`) | Split on `,` to get a list |
+| `nelements` | int | Number of distinct elements | 2–8 |
+| `formation_energy_per_atom` | float | DFT formation energy (eV/atom), referenced to elemental standards | [-5.154, 0.002] eV/atom |
+| `energy_above_hull` | float | Thermodynamic stability: distance to convex hull (eV/atom). 0 = on hull (perfectly stable) | [0, 0.1] eV/atom |
+| `band_gap` | float | DFT band gap (eV). 0 = metal | [0, 7.296] eV |
+| `is_metal` | bool | True if band gap = 0 | |
+| `is_stable` | bool | True if energy_above_hull = 0 exactly | 6,479 / 40,923 |
+| `volume_A3` | float | Unit cell volume (Å³) | Per unit cell |
+| `density_g_cm3` | float | Density (g/cm³) | |
+| `nsites` | int | Number of atoms in the unit cell | |
+| `crystal_system` | str | Crystallographic system | Monoclinic (33%), Triclinic (28%), Orthorhombic (16%), Trigonal, Tetragonal, Cubic, Hexagonal |
+| `space_group` | str | Space group symbol (e.g. `P2_1/c`) | |
+| `has_C` | bool | True = carbonate (contains carbon) | 1,790 carbonates, 39,133 oxides |
+
+---
+
+## Data Generating Process
+
+All properties are from DFT calculations using the Vienna Ab initio Simulation Package (VASP) with the PBE generalized gradient approximation (GGA) functional, as run by the Materials Project. Formation energies are corrected using MP's fitted elemental reference energies (GGA/GGA+U mixing scheme). Band gaps from PBE are systematically underestimated by ~30–50% relative to experiment — they are reliable for ranking and classification but not for absolute values.
+
+The convex hull (energy_above_hull) is computed over all MP entries for each chemical system. `is_stable = True` means no known DFT phase is more stable at that composition.
+
+---
+
+## Key Statistics
+
+- *Total entries:* 40,923
+- *Carbonates (has_C=True):* 1,790 — these are CO₂ capture products
+- *Oxides (has_C=False):* 39,133 — these are potential sorbent precursors
+- *Thermodynamically stable (hull=0):* 6,479 (15.8%)
+- *Metals (band_gap=0):* ~4,000
+- *Most frequent capture elements:* Li (13,690), Na (7,439), Mn (7,422), Fe (5,586), Ca (3,600), Mg (3,537)
+
+---
+
+## Known Properties and Caveats
+
+- *No explicit CO₂ capture capacity or kinetics:* The dataset contains thermodynamic ground-state properties only. Actual CO₂ capture performance depends on surface area, porosity, regeneration energy, and reaction kinetics — none of which are in this dataset. Thermodynamic proxies (formation energy differences between oxide and carbonate pairs) are the best available signal.
+- *Band gap underestimation:* PBE systematically underestimates band gaps. Use band_gap as a relative indicator, not an absolute value.
+- *Some entries are polymorphs:* Multiple rows may share the same formula but differ in crystal structure (e.g., multiple FeO entries with different space groups). These are genuinely distinct materials with different properties.
+- *Energy above hull cutoff at 0.1 eV/atom:* This is a standard threshold for "synthesizable" materials. Entries with hull > 0 may still be experimentally accessible as metastable phases (e.g., via low-temperature synthesis or low-temperature synthesis or thin film deposition).
+- *Carbonation reaction energies require pairing:* To compute ΔE_carbonation = E(MₓCO₃) − E(MₓOᵧ) − E(CO₂), you need to match oxide and carbonate rows by chemical system and look up the reference CO₂ energy (approximately −11.17 eV/formula unit in GGA).
+
+---
+
+## Suggested Analyses
+
+1. *Thermodynamic screening of carbonation reactions:* For each oxide in the dataset, find its corresponding carbonate (if present) and compute the reaction energy ΔE = E_carbonate − E_oxide − E_CO₂. Rank materials by favorability of CO₂ uptake. Identify which elemental families (Ca, Mg, Li, Fe…) have the most favorable thermodynamics.
+
+2. *Formation energy prediction:* Train a ML model (gradient boosting or neural network) to predict formation_energy_per_atom from composition features (element fractions, electronegativity, atomic radius) and structural features (crystal system, nsites, density). This is a standard materials informatics benchmark.
+
+3. *Stability classification:* Binary classification: predict is_stable from composition + structure features. Analyze which chemical systems are most likely to sit on the convex hull.
+
+4. *Metal vs. insulator classification:* Predict is_metal from composition. CO₂ sorbents should be insulators or semiconductors for regeneration efficiency — use this to filter candidates.
+
+5. *Carbonate–oxide pairing and reaction energy landscape:* Build a matched dataset of (oxide, carbonate) pairs sharing the same metal composition. Map the reaction energy landscape as a function of metal identity, oxidation state, and crystal system.
+
+6. *Elemental substitution screening:* For known good sorbents (CaO → CaCO₃, MgO → MgCO₃), identify isostructural compounds where Ca/Mg is replaced by other elements and rank them by predicted carbonation energy.
+
+
+Idea:
+**Title: Thermochemical Screening of Metal-Oxide Carbonation via Stoichiometric Parsing and Stability Constraints**
+
+**Description:** This study implements a rigorous chemical-system mapping by parsing the `formula` string into atomic fractions to isolate pairs of oxide precursors and carbonate products sharing identical metal-to-oxygen ratios. We calculate the reaction energy $\Delta E = E(M_xCO_3) - E(M_xO_y) - E(CO_2)$ for all stoichiometric pairs, strictly filtering for candidates where both the oxide and carbonate reside within the 0.1 eV/atom threshold of the convex hull to ensure experimental accessibility. By aggregating these $\Delta E$ values across the 1,790 carbonate entries, we construct a thermodynamic landscape that quantifies the carbonation favorability as a function of metal identity (Li, Mg, Ca, Fe, etc.) and oxidation state. We identify "optimal-delta" candidates—materials where the reaction is thermodynamically spontaneous yet reversible—by filtering against `is_stable` descriptors to select for robust, long-term cycling. This approach isolates high-performance sorbent precursors by focusing on the chemical potential of the M-O bond rather than structural proxies, providing a reliable ranking of inorganic materials for industrial CO₂ capture.
+
+Research plan:
+1. **Refined Stoichiometric Mapping**: Expand the pairing logic beyond simple $M_xO_y + CO_2 \rightarrow M_xCO_3$ reactions. Implement a generalized reaction parser that identifies all possible carbonation pathways by balancing the chemical equation $M_aO_b + nCO_2 \rightarrow M_aO_{b-2n}(CO_3)_n$. This allows for partial carbonation and complex stoichiometry, ensuring that we capture reactions where oxygen is released or consumed as part of the phase transformation.
+
+2. **Sensitivity Analysis of Reaction Energy**: Calculate $\Delta E$ for all identified pairs using the reference $E_{CO_2} = -11.17$ eV. Perform a systematic sensitivity analysis by perturbing $E_{CO_2}$ by $\pm 0.1$ eV. For each pair, track the variance in $\Delta E$ to establish a confidence interval for the thermodynamic favorability, identifying which candidates remain within the "optimal-delta" window (-0.5 to -1.5 eV) across the entire range.
+
+3. **Empirical Entropy Estimation for $T_{reg}$**: Replace the constant $\Delta S$ approximation with an empirical group-contribution method. Estimate the molar entropy of the solid oxide and carbonate phases ($S_{solid}$) using the sum of constituent atomic entropies adjusted by the crystal system and density. Calculate $\Delta S_{total} = (S_{carbonate} - S_{oxide}) - S_{CO_2(gas)}$, where $S_{CO_2(gas)} \approx 213.8$ J/mol·K. Use this to compute a more physically grounded $T_{reg} = \Delta H / \Delta S$.
+
+4. **Stability-Delta Correlation Analysis**: Construct a 2D landscape plotting $\Delta E$ (reaction favorability) against the `energy_above_hull` of the resulting carbonate phase. Quantify the "stability penalty" by calculating the correlation coefficient between these two variables. This will identify if the most thermodynamically favorable capture materials are inherently prone to phase decomposition.
+
+5. **Design Space Mapping via Descriptors**: Perform a multivariate regression analysis to correlate $\Delta E$ with fundamental material descriptors: metal electronegativity, ionic radius, and oxidation state. Use these correlations to define a "design space" that predicts the $\Delta E$ of hypothetical or uncalculated compositions.
+
+6. **Doping and Substitution Screening**: Identify "near-miss" candidates—materials that are stable but have $\Delta E$ values just outside the optimal window. Propose virtual substitutions (e.g., replacing a fraction of the metal cation $A$ with $B$ in $A_xO_y$) based on the trends identified in Step 5. Calculate the predicted $\Delta E$ for these doped systems to determine if they shift into the optimal capture window without significantly increasing the `energy_above_hull`.
+
+7. **Validation of the Stability Gap**: Compare the distribution of `energy_above_hull` for carbonates vs. oxides to determine if the "stability gap" is a systematic artifact of PBE-DFT. Analyze the frequency of stable carbonates ($hull=0$) across different crystal systems to see if specific structural symmetries are more conducive to maintaining stability during the carbonation process.
+
+8. **Final Candidate Synthesis Guidance**: Aggregate all findings to produce a ranked list of "Design-Ready" materials. Prioritize candidates that satisfy three criteria: (1) $\Delta E$ within the optimal window, (2) low `energy_above_hull` for both oxide and carbonate, and (3) a predicted $T_{reg}$ within the 300–600°C range. Provide the specific chemical substitutions required to tune these materials toward the optimal performance zone.
+
+Previous research plan:
+1. **Data Cleaning and Preprocessing**: Load the parquet dataset and perform quality checks: remove duplicate entries, handle missing values in critical columns (e.g., `formation_energy_per_atom`), and standardize chemical formulas. Parse formulas to extract element counts and calculate the total energy per formula unit ($E_{f\_unit} = \text{formation\_energy\_per\_atom} \times \text{nsites}$).
+
+2. **Stoichiometric Pairing Logic**: Group materials by their metal composition. For each metal, identify potential reaction pairs of the form $M_xO_y + zCO_2 \rightarrow M_x(CO_3)_z$. Explicitly verify the oxygen balance ($y = 2z$) to ensure the reaction is physically meaningful. For formulas with multiple polymorphs, retain the entry with the lowest `energy_above_hull` as the representative phase, while optionally tracking the range of energies for structural sensitivity analysis.
+
+3. **Reaction Energy Calculation**: Define the reference energy for $CO_2$ as $E_{CO_2} = -11.17$ eV, consistent with standard GGA/PBE values used in the Materials Project. For each valid oxide-carbonate pair, calculate the reaction energy: $\Delta E = E(M_x(CO_3)_z) - E(M_xO_y) - z \times E_{CO_2}$. Normalize the result by $z$ to obtain the reaction energy per mole of $CO_2$.
+
+4. **Thermodynamic Landscape Mapping**: Aggregate the normalized $\Delta E$ values across metal families. Generate heatmaps and distribution plots of $\Delta E$ versus metal atomic number and group to visualize thermodynamic trends. Identify which elemental families provide the most favorable window for $CO_2$ capture.
+
+5. **Stability and Reversibility Filtering**: Apply a strict filter to retain only candidates where both the oxide and carbonate precursors are thermodynamically stable (`energy_above_hull` = 0). This subset represents the most robust candidates for long-term cycling, minimizing the risk of phase decomposition during regeneration.
+
+6. **Regeneration Temperature Estimation**: Calculate a proxy for the regeneration temperature ($T_{reg}$) using the relation $T_{reg} \approx \Delta E / \Delta S$, where $\Delta S \approx 213.8$ J/mol·K (the entropy of $CO_2$ gas). This provides a tangible metric for industrial feasibility, identifying materials that can be regenerated within a reasonable temperature range (e.g., 300–600°C).
+
+7. **Candidate Ranking and "Optimal-Delta" Selection**: Rank all valid pairs by their normalized $\Delta E$. Define an "optimal-delta" range (e.g., -0.5 eV to -1.5 eV per $CO_2$) to identify materials that are sufficiently exothermic for spontaneous capture but require manageable energy for regeneration.
+
+8. **Correlation and Validation**: Perform a correlation analysis between $\Delta E$ and structural/chemical descriptors (e.g., `volume_A3`, `density_g_cm3`, metal electronegativity, and atomic radius). Use these trends to validate the hypothesis that the chemical potential of the M-O bond is the primary driver of carbonation favorability, culminating in a final list of top-performing sorbent precursors.
+
+Feedback on previous research plan:
+The current analysis successfully identifies the fundamental thermodynamic trade-off between capture favorability and phase stability. However, the reliance on a static $E_{CO_2}$ reference and the assumption of a constant $\Delta S$ for regeneration temperature estimation introduces significant uncertainty that must be addressed to move from "screening" to "predictive design."
+
+**Critical Weaknesses & Gaps:**
+1. **Entropy Approximation:** The use of a constant $\Delta S \approx 213.8$ J/mol·K is a major oversimplification. This value represents gaseous $CO_2$ but ignores the significant entropy change of the solid phase ($S_{solid, carbonate} - S_{solid, oxide}$). For many of these materials, the vibrational entropy contribution is non-negligible. This likely biases your $T_{reg}$ estimates, particularly for the transition metal systems.
+2. **The "Zero-Candidate" Paradox:** You report zero stable candidates in the optimal window. This is a critical finding, but it is currently treated as a limitation rather than a design constraint. You must test if this "stability gap" is an artifact of the Materials Project's specific DFT functional (PBE) or a physical reality. PBE is known to have systematic errors in predicting the relative stability of oxides vs. carbonates.
+3. **Stoichiometric Pairing Logic:** Your pairing logic is currently limited to $y=2z$ and $y=z$. This misses complex carbonation pathways (e.g., $M_xO_y + nCO_2 \rightarrow M_xO_{y-2n}(CO_3)_n$ or partial carbonation). By forcing strict stoichiometric matches, you may be excluding viable, partially carbonated phases that are more stable than the full carbonate.
+
+**Actionable Recommendations:**
+1. **Refine $T_{reg}$ with Vibrational Entropy:** Instead of a constant $\Delta S$, use the Debye model or the Materials Project's available phonon data (if accessible) to estimate the vibrational entropy of the solid phases. If phonon data is unavailable, use empirical group-contribution methods for solid-state entropy to provide a more robust $T_{reg}$ range.
+2. **Sensitivity Analysis on $E_{CO_2}$:** The reference energy of $CO_2$ is the most sensitive parameter in your model. Perform a sensitivity analysis by varying $E_{CO_2}$ by $\pm 0.1$ eV to see if your "optimal-delta" candidates are robust or if they shift significantly. This will quantify the confidence in your ranking.
+3. **Expand the Reaction Space:** Relax the strict $y=2z$ and $y=z$ constraints. Allow for reactions where the oxygen stoichiometry changes (e.g., $2Li_2O + CO_2 \rightarrow Li_2CO_3 + 2Li$). This will likely uncover more candidates and provide a more realistic view of the chemical potential landscape.
+4. **Focus on "Stability-Delta" Correlation:** Rather than just looking at $\Delta E$, plot $\Delta E$ vs. `energy_above_hull` for the carbonate phase. This will reveal if there is a "stability penalty" associated with the most favorable capture materials, allowing you to quantify the cost of stabilization (e.g., how much energy is required to maintain a metastable phase).
+5. **Shift from "Screening" to "Design Rules":** Use the strong correlation between electronegativity/ionic radius and $\Delta E$ to propose specific, untested ternary compositions (e.g., $A_x B_{1-x} O_y$) that target the optimal $\Delta E$ window. This moves the project from descriptive statistics to predictive synthesis guidance.
+
+**Future Iteration Focus:**
+Stop searching for "the perfect material" in the existing database. Instead, use the identified correlations to define the "design space" for doping. The next iteration should focus on identifying which specific dopants (e.g., substituting Ca with Mg or transition metals) are most likely to shift the $\Delta E$ of a stable oxide into the optimal window without pushing the carbonate phase too far off the convex hull.
+
+
+Respond in this format:
+
+\\begin{SUGGESTIONS}
+<SUGGESTIONS>
+\\end{SUGGESTIONS}
+
+In <SUGGESTIONS> put the suggestions to improve the plan.
+
+###### PROMPT ENDS ########
+
+\begin{SUGGESTIONS}
+The current research plan is well-structured and addresses the feedback from the previous iteration by incorporating entropy estimation, sensitivity analysis, and a shift toward predictive design. To further strengthen the plan, I suggest the following refinements:
+
+1. **Clarify the "Generalized Reaction Parser" (Step 1):** Ensure the parser accounts for the fact that the Materials Project dataset contains entries with different unit cell sizes. When balancing $M_aO_b + nCO_2 \rightarrow M_aO_{b-2n}(CO_3)_n$, you must normalize energies to a common basis (e.g., per metal atom or per formula unit) before calculating $\Delta E$. Explicitly mention this normalization step to avoid errors caused by comparing different supercell sizes.
+
+2. **Refine the Entropy Estimation (Step 3):** Since phonon data is often sparse in the Materials Project for 40,000+ entries, clarify that the "empirical group-contribution method" will rely on the **Neumann-Kopp rule** or similar additive atomic entropy models. This is a standard and computationally efficient approach for solid-state materials when full vibrational spectra are unavailable.
+
+3. **Address the "Stability Gap" (Step 7):** The plan to compare the distribution of `energy_above_hull` is excellent. To make this more actionable, explicitly state that you will calculate the **"Stability Penalty"**—the difference in `energy_above_hull` between the oxide and the carbonate. If a material has a very favorable $\Delta E$ but a high stability penalty, it is likely to undergo phase segregation or sintering during cycling. Identifying this "penalty" will help filter out materials that are thermodynamically favorable but practically unstable.
+
+4. **Operationalize the Doping Strategy (Step 6):** To make the "virtual substitutions" more concrete, specify that you will use the **Vegard’s Law** approximation (linear interpolation of properties) or a simple weighted average of the constituent elements' properties (electronegativity, ionic radius) to estimate the $\Delta E$ of the doped systems. This provides a clear, reproducible method for the "design space" exploration.
+
+5. **Constraint Check:** Ensure that the "optimal-delta" window (-0.5 to -1.5 eV) is treated as a soft target rather than a hard cutoff, as the sensitivity analysis (Step 2) will provide the necessary context to adjust this range based on the confidence intervals of the DFT data.
+
+The plan is now sufficiently detailed and scientifically rigorous. No further major structural changes are required.
+\end{SUGGESTIONS}
+
