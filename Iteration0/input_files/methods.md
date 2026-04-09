@@ -1,0 +1,15 @@
+1. **Data Cleaning and Preprocessing**: Load the parquet dataset and perform quality checks: remove duplicate entries, handle missing values in critical columns (e.g., `formation_energy_per_atom`), and standardize chemical formulas. Parse formulas to extract element counts and calculate the total energy per formula unit ($E_{f\_unit} = \text{formation\_energy\_per\_atom} \times \text{nsites}$).
+
+2. **Stoichiometric Pairing Logic**: Group materials by their metal composition. For each metal, identify potential reaction pairs of the form $M_xO_y + zCO_2 \rightarrow M_x(CO_3)_z$. Explicitly verify the oxygen balance ($y = 2z$) to ensure the reaction is physically meaningful. For formulas with multiple polymorphs, retain the entry with the lowest `energy_above_hull` as the representative phase, while optionally tracking the range of energies for structural sensitivity analysis.
+
+3. **Reaction Energy Calculation**: Define the reference energy for $CO_2$ as $E_{CO_2} = -11.17$ eV, consistent with standard GGA/PBE values used in the Materials Project. For each valid oxide-carbonate pair, calculate the reaction energy: $\Delta E = E(M_x(CO_3)_z) - E(M_xO_y) - z \times E_{CO_2}$. Normalize the result by $z$ to obtain the reaction energy per mole of $CO_2$.
+
+4. **Thermodynamic Landscape Mapping**: Aggregate the normalized $\Delta E$ values across metal families. Generate heatmaps and distribution plots of $\Delta E$ versus metal atomic number and group to visualize thermodynamic trends. Identify which elemental families provide the most favorable window for $CO_2$ capture.
+
+5. **Stability and Reversibility Filtering**: Apply a strict filter to retain only candidates where both the oxide and carbonate precursors are thermodynamically stable (`energy_above_hull` = 0). This subset represents the most robust candidates for long-term cycling, minimizing the risk of phase decomposition during regeneration.
+
+6. **Regeneration Temperature Estimation**: Calculate a proxy for the regeneration temperature ($T_{reg}$) using the relation $T_{reg} \approx \Delta E / \Delta S$, where $\Delta S \approx 213.8$ J/mol·K (the entropy of $CO_2$ gas). This provides a tangible metric for industrial feasibility, identifying materials that can be regenerated within a reasonable temperature range (e.g., 300–600°C).
+
+7. **Candidate Ranking and "Optimal-Delta" Selection**: Rank all valid pairs by their normalized $\Delta E$. Define an "optimal-delta" range (e.g., -0.5 eV to -1.5 eV per $CO_2$) to identify materials that are sufficiently exothermic for spontaneous capture but require manageable energy for regeneration.
+
+8. **Correlation and Validation**: Perform a correlation analysis between $\Delta E$ and structural/chemical descriptors (e.g., `volume_A3`, `density_g_cm3`, metal electronegativity, and atomic radius). Use these trends to validate the hypothesis that the chemical potential of the M-O bond is the primary driver of carbonation favorability, culminating in a final list of top-performing sorbent precursors.
