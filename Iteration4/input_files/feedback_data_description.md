@@ -1,0 +1,9 @@
+The analysis results are directly constrained by the dataset description in the following ways:
+
+1. **Lack of Kinetic and Porosity Data**: The dataset description explicitly states that "Actual CO₂ capture performance depends on surface area, porosity, regeneration energy, and reaction kinetics — none of which are in this dataset." The analysis relies on a "melting point proxy" and "topotactic transition verification" to infer structural robustness, but the absence of actual experimental porosity or surface area data limits the ability to predict real-world sintering or kinetic performance.
+
+2. **Band Gap Reliability**: The dataset description warns that "PBE systematically underestimates band gaps" and they are "reliable for ranking and classification but not for absolute values." The analysis uses a hard filter of `band_gap > 0.5 eV` to select insulators; because the PBE values are systematically low, this filter may have incorrectly excluded valid insulators that appear as metals or narrow-gap semiconductors in the dataset.
+
+3. **Thermodynamic Proxy Limitations**: The dataset description notes that "Thermodynamic proxies... are the best available signal." The analysis relies on these proxies to calculate $\Delta G$ and $T_{eq}$. Since the dataset only contains ground-state DFT properties, the analysis is limited to 0 K thermodynamics corrected by empirical factors, which may not capture the full complexity of high-temperature phase transitions or non-ideal gas behavior.
+
+4. **Energy Above Hull Cutoff**: The analysis uses the 0.1 eV/atom threshold provided in the dataset to define "experimental accessibility." This constraint inherently excludes potentially high-performing metastable phases that might exist outside this energy window, limiting the scope of the discovery to materials already identified as near-stable by the Materials Project.
