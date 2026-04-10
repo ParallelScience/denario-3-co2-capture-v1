@@ -1,0 +1,7 @@
+Classifier: Step 1 — Determining archive...
+  Archive: cond-mat — The paper focuses on computational materials science and the screening of solid-state materials for CO2 capture, which is a core topic within condensed matter physics and materials science.
+Classifier: Step 2 — Determining subcategory within 'cond-mat'...
+  Primary: cond-mat.mtrl-sci
+  Secondary: physics.chem-ph, cond-mat.stat-mech
+  Justification: The paper focuses on computational materials science, specifically the high-throughput screening of solid sorbents for CO2 capture, evaluating thermodynamic stability, mechanical properties, and structural phase transitions. It also incorporates chemical physics principles for thermodynamic analysis and statistical mechanics for phase stability.
+Classification completed in 0 min 2 sec. Cost: $0.0000

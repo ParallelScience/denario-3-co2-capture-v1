@@ -1,0 +1,8 @@
+{
+  "primary_category": "cond-mat.mtrl-sci",
+  "secondary_categories": [
+    "physics.chem-ph",
+    "cond-mat.stat-mech"
+  ],
+  "justification": "The paper focuses on computational materials science, specifically the high-throughput screening of solid sorbents for CO2 capture, evaluating thermodynamic stability, mechanical properties, and structural phase transitions. It also incorporates chemical physics principles for thermodynamic analysis and statistical mechanics for phase stability."
+}
