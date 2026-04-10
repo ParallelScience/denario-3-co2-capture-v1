@@ -1,0 +1,65 @@
+{
+    "sub_tasks": [
+        {
+            "bullet_points": [
+                "Load the dataset and validate formula strings.",
+                "Parse formulas to extract metal elements (all elements except O and C) and identify oxide-carbonate reaction pairs where the metal set matches exactly.",
+                "Retain the most stable polymorph (lowest energy_above_hull) for each unique chemical system.",
+                "Print summary statistics: total oxide/carbonate entries, unique chemical systems, and valid pairs found per metal family (Ca, Mg, Li, Na, K, Ba, Sr, Mn, Fe, Co, Ni, Cu, Zn, Al).",
+                "Save the processed pairs to a file."
+            ],
+            "sub_task": "Data Validation and Stoichiometric Pairing",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Calculate the 0 K reaction energy ΔE = E(MxCO3) - E(MxOy) - E(CO2) on a per-formula-unit basis, using the reference energy for CO2 (-11.17 eV/formula unit).",
+                "Apply a strict filter requiring both the oxide precursor and the carbonate product to have an energy_above_hull <= 0.1 eV/atom.",
+                "Print the top 20 most favorable and top 20 least favorable pairs by reaction energy.",
+                "Save the calculated reaction energies and filtered candidate list."
+            ],
+            "sub_task": "Thermodynamic Reaction Energy Calculation",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Compute ΔG(T, P) = ΔH - TΔS for each pair, using a fixed approximation for CO2 entropy loss (ΔSCO2 ≈ -0.214 kJ/mol/K).",
+                "Perform sensitivity analysis (500 K to 1200 K at PCO2 = 0.15 bar) to identify equilibrium temperature (Teq) where ΔG ≈ 0.",
+                "Generate a multi-panel figure: (a) histogram of ΔE by metal family, (b) scatter plot of ΔE vs Teq colored by metal family, and (c) box plots of ΔG at 700 K grouped by metal family.",
+                "Save the figure and the temperature-dependent analysis results."
+            ],
+            "sub_task": "Gibbs Free Energy, Equilibrium Analysis, and Visualization",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Estimate melting point proxy: Tmelt_proxy = |formation_energy_per_atom| * density * scaling_constant.",
+                "Calibrate the scaling constant using known oxides (CaO, MgO) and print the calibration check results.",
+                "Filter out candidates with Tmelt_proxy < 800 K.",
+                "Perform impurity screening to exclude materials prone to forming low-melting-point sulfates.",
+                "Save the filtered candidate list."
+            ],
+            "sub_task": "Thermal Stability and Impurity Screening",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Filter candidates based on band_gap (> 0.5 eV) and is_metal (False).",
+                "Rank final candidates using a weighted composite score (balancing ΔG at 700 K, Tmelt_proxy, and band gap).",
+                "Print a final ranked table of the top 20 candidates with all relevant scores.",
+                "Save the final ranked table as a CSV file."
+            ],
+            "sub_task": "Electronic Property Filtering and Final Ranking",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Write a complete Results section structured as: (1) Stoichiometric Pairing Statistics, (2) Thermodynamic Reaction Energy Landscape, (3) Gibbs Free Energy and Equilibrium Temperature Analysis, (4) Thermal Stability and Electronic Property Filtering, and (5) Final Candidate Ranking.",
+                "Reference specific numerical results, statistics, and plot descriptions generated in previous steps to support the analysis.",
+                "Discuss the industrial viability of the identified optimal-delta candidates."
+            ],
+            "sub_task": "Final Results Synthesis and Reporting",
+            "sub_task_agent": "researcher"
+        }
+    ]
+}
