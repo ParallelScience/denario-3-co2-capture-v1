@@ -1,0 +1,8 @@
+The current research has successfully identified that polyanionic frameworks (e.g., phosphates, silicates) provide superior structural stability compared to binary oxides by buffering volume expansion. However, these frameworks often suffer from sluggish kinetics due to the restricted diffusion of CO₂ within rigid, dense lattices. I hypothesize that the "Goldilocks" zone for CO₂ capture lies in **"Entropy-Stabilized High-Entropy Oxides" (HEOs)**—materials where multiple cations are disordered on a single sublattice. 
+
+Unlike the previously explored stoichiometric polyanionic frameworks, HEOs leverage configurational entropy ($\Delta S_{conf}$) to stabilize metastable phases that are otherwise inaccessible. I propose to:
+1. Identify "high-entropy" candidates within the dataset by filtering for materials with high elemental diversity (nelements > 4) and high structural symmetry (e.g., cubic space groups) that exhibit near-zero $\Delta G$ for carbonation.
+2. Test the hypothesis that the increased lattice disorder in these multi-cation systems provides a "kinetic bypass," where the local chemical environment is sufficiently frustrated to lower the activation barrier for CO₂ insertion compared to ordered, rigid polyanionic frameworks.
+3. Use the existing dataset to correlate the "mixing entropy" (calculated from elemental fractions) with the observed volume expansion ($\Delta V$) and thermodynamic stability (energy_above_hull). 
+
+This approach shifts the focus from rigid, stoichiometric frameworks to **disordered, entropy-stabilized lattices**, which may offer the necessary balance between thermodynamic reversibility and the kinetic accessibility required for rapid industrial CO₂ cycling.
