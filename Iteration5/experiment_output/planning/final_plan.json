@@ -1,0 +1,74 @@
+{
+    "sub_tasks": [
+        {
+            "bullet_points": [
+                "Load the parquet dataset and filter for entries with energy_above_hull ≤ 0.1 eV/atom.",
+                "Use a robust formula parser to extract elemental compositions, normalizing metal-to-oxygen ratios while excluding C and O.",
+                "Identify and match oxide-carbonate pairs (MxOy, MxCO3) sharing identical metal stoichiometry.",
+                "Print summary statistics: total pairs found, number of unique metal systems, and polymorph counts per composition.",
+                "Save the matched pairs and their properties to a file."
+            ],
+            "sub_task": "Data Preprocessing and Stoichiometric Mapping",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Reconstruct total energy per formula unit using formation_energy_per_atom and nsites (accounting for reference elemental energies).",
+                "Calculate reaction enthalpy ΔH using the reference energy for CO2 (-11.17 eV/formula unit).",
+                "Estimate Gibbs free energy ΔG at 700 K using the Dulong-Petit limit (3R per mole of atoms) for solids and SCO2 = 213.8 J/mol/K.",
+                "Print ΔH and ΔG distributions (mean, std, min, max) per elemental family.",
+                "Save the calculated thermodynamic values."
+            ],
+            "sub_task": "Thermodynamic Landscape Calculation",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Compute volume per formula unit by dividing volume_A3 by the number of formula units in the cell.",
+                "Calculate percentage volume expansion ΔV for each reaction pair.",
+                "Print the distribution of ΔV and generate a histogram plot.",
+                "Save the filtered list of \"mechanically robust\" candidates (|ΔV| ≤ 20%)."
+            ],
+            "sub_task": "Mechanical Integrity and Volume Change Analysis",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Estimate melting point Tmelt using a literature-based empirical mapping (e.g., linear scaling from benchmarks like CaO, MgO, Li2O).",
+                "Calculate Tamman temperature (TT ≈ 0.5 × Tmelt) and the operating margin (TT - 700 K).",
+                "Print the Tamman temperature and operating margin for the top 20 candidates."
+            ],
+            "sub_task": "Kinetic and Sintering Resistance Assessment",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Identify isostructural compounds by matching space group symbols and nsites (within ±2 atoms).",
+                "Compute carbonation energy shift relative to reference sorbents (CaO, MgO).",
+                "Print a ranked table of substituted candidates sorted by ΔH shift magnitude, flagging potential synthesis targets."
+            ],
+            "sub_task": "Isostructural Substitution and Tuning",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Compute a composite score for each candidate combining normalized ΔG, ΔV percentage, and Tamman margin.",
+                "Generate a multi-panel figure: (1) Pareto front of ΔG vs ΔV with poor sorbents highlighted, (2) ΔH box plots by elemental family, (3) Tamman temperature margin plot, and (4) isostructural substitution energy shifts.",
+                "Print the top 20 ranked candidates with all properties in a formatted table.",
+                "Save the final ranked list as a CSV file for the researcher."
+            ],
+            "sub_task": "Final Scoring and Multi-Panel Visualization",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Write a full Results section of a scientific paper based on the engineer's outputs.",
+                "Include subsections on: (1) thermodynamic landscape, (2) mechanical integrity, (3) sintering resistance, (4) isostructural substitution trends, (5) negative control validation, and (6) final ranked candidate discussion.",
+                "Ensure all cited numerical values are derived from the engineer's printed reports.",
+                "Discuss industrial applicability and provide the final recommendation list."
+            ],
+            "sub_task": "Results Synthesis and Reporting",
+            "sub_task_agent": "researcher"
+        }
+    ]
+}
