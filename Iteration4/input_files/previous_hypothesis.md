@@ -1,0 +1,8 @@
+The current research has successfully identified that "zero-strain" mechanisms and rigid framework structures are superior to simple binary oxides for CO₂ capture. However, all previous iterations have treated the carbonation reaction as a bulk phase transformation ($M_xO_y \rightarrow M_xCO_3$). I hypothesize that the "pulverization" and "stability" issues identified in previous reports are not just functions of volume expansion, but are driven by the mismatch in the local coordination environment between the oxide precursor and the carbonate product. 
+
+My proposed idea is to perform a **Local Coordination Environment (LCE) Fingerprinting** analysis. Instead of relying solely on stoichiometric parsing and bulk thermodynamics, we will:
+1. Calculate the change in the coordination number (CN) and the polyhedral distortion index (using the Voronoi tessellation of the crystal structure) for the metal centers during the transition from the oxide to the carbonate.
+2. Define a "Structural Compatibility Score" based on the similarity of the metal-oxygen polyhedra between the oxide and the carbonate. 
+3. Test the hypothesis that materials with high structural compatibility (i.e., those that undergo minimal rearrangement of the metal-oxygen coordination sphere during carbonation) will exhibit lower kinetic barriers and higher cyclic stability, even if their bulk thermodynamic $\Delta E$ is slightly less favorable than the current Pareto-optimal candidates. 
+
+This approach shifts the focus from "what is the most exothermic reaction" to "which structural transformation is the most topotactic," potentially identifying a new class of sorbents that are kinetically robust and resistant to the mechanical degradation observed in previous iterations.

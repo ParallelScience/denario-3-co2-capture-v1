@@ -1,0 +1,9 @@
+The analysis results are directly impacted by the dataset description in the following ways:
+
+1. **Systematic Energy Shift**: The analysis acknowledges that the absolute values of $\Delta E$ and $T_{reg}$ are inflated. This is directly attributable to the dataset's reliance on DFT-calculated energies for molecular CO₂ (referenced as -11.17 eV/formula unit) rather than experimental standard formation energies. While the researchers correctly note that relative rankings remain robust, the absolute values are artifacts of the dataset's DFT-based energy scale.
+
+2. **Absence of Aluminum Pairs**: The failure to identify valid stoichiometric pairs for Aluminum is directly attributable to the dataset's scope. The dataset contains only simple inorganic oxides and carbonates; it lacks the complex basic carbonates, hydroxides, or hydrated phases that are the actual stable products of Aluminum-based CO₂ capture. The "strict mass-balance constraints" of the research plan, when applied to this limited dataset, naturally exclude Aluminum.
+
+3. **Band Gap Filtering**: The ~35% reduction in candidates due to the `band_gap > 0.5 eV` filter is a direct consequence of the dataset's composition. The dataset includes transition metal oxides (Fe, Co, Mn, Cu) which are frequently metallic or narrow-bandgap semiconductors. The analysis correctly identifies that this filter is necessary because the dataset includes these metallic phases, which are unsuitable for the intended thermal management application.
+
+4. **Entropy Approximation**: The use of the Dulong-Petit limit for entropy estimation is a necessary methodological choice forced by the dataset's limitation: the dataset provides only ground-state DFT properties (energy, volume, structure) and lacks experimental heat capacity or vibrational density of states data required for more accurate entropy calculations.
