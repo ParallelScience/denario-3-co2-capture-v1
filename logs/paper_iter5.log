@@ -1,0 +1,38 @@
+/opt/denario-venv/lib/python3.12/site-packages/denario/langgraph_agents/paper_module/LaTeX/AAS_keywords.txt
+Found 2 plot files to process....
+Plot files: ['step_3_volume_expansion_histogram_1775790499.png', 'step_6_multi_panel_analysis_1_1775790796.png']
+Extracting UNESCO keywords.......
+  Level 1 domains: ['CHEMISTRY', 'PHYSICS', 'TECHNOLOGICAL SCIENCES', 'MATHEMATICS']
+  Level 2 sub-fields for CHEMISTRY: ['Analytical chemistry', 'Inorganic chemistry', 'Physical chemistry', 'Other chemical specialities (specify)']
+  Level 3 areas for Analytical chemistry: ['Thermal analytical methods', 'Volumetry', 'Gravimetry', 'X-ray spectroscopy', 'Electrochemical analysis', 'Other (specify)']
+  Level 3 areas for Inorganic chemistry: ['Alkaline earths', 'Alkaline elements', 'Metals', 'Phosphorus compounds', 'Sodium compounds', 'Structure of inorganic compounds']
+  Level 3 areas for Physical chemistry: ['Chemical and phase equilibria', 'High temperature chemistry', 'Phase equilibria', 'Solid state chemistry', 'Thermochemistry', 'Thermodynamics']
+  Level 2 sub-fields for PHYSICS: ['Physical chemistry', 'Solid state physics', 'Thermodynamics', 'Fluids (physics of)']
+  Level 3 areas for Physical chemistry: ['Chemical and phase equilibria', 'High temperature chemistry', 'Phase equilibria', 'Solid state chemistry', 'Thermochemistry', 'Thermodynamics']
+  Level 3 areas for Solid state physics: ['Crystal structure', 'Crystallography', 'Diffusion in solids', 'Mechanical properties', 'Surfaces', 'Thermal properties of solids']
+  Level 3 areas for Thermodynamics: ['Phase transition', 'Thermodynamic equilibria', 'Thermodynamic relationships', 'High temperature', 'Kinetic theory', 'Transport phenomena']
+  Level 3 areas for Fluids (physics of): ['Fluid flow', 'Fluid mechanics', 'Gases', 'High pressure phenomena', 'Liquids', 'Other (specify)']
+  Level 2 sub-fields for TECHNOLOGICAL SCIENCES: ['Chemical technology and engineering', 'Environmental technology and Engineering', 'Industrial technology', 'Materials technology']
+  Level 3 areas for Chemical technology and engineering: ['Chemical processes', 'Chemical separation', 'Chemical synthesis', 'Industrial chemistry', 'Catalysis technology', 'Chemical economics']
+  Level 3 areas for Environmental technology and Engineering: ['Air pollution control', 'Pollution engineering', 'Industrial wastes', 'Sanitary engineering', 'Water pollution control', 'Other (specify)']
+  Level 3 areas for Industrial technology: ['Industrial equipment', 'Industrial machinery', 'Industrial processes', 'Maintenance engineering', 'Processing engineering', 'Process specifications']
+  Level 3 areas for Materials technology: ['Cements', 'Ceramics', 'Cermets', 'Màterial properties', 'Material resistance', 'Refractories']
+  Level 2 sub-fields for MATHEMATICS: ['Computer Sciences', 'Numerical analysis', 'Operations research', 'Statistics']
+  Level 3 areas for Computer Sciences: ['Artificial intelligence', 'Computer-assisted design', 'Computer software', 'Data banks', 'Informatics', 'Simulation']
+  Level 3 areas for Numerical analysis: ['Algorithm construction', 'Error analysis', 'Interpolation', 'approximation and curve fitting', 'Iterative methods', 'Linear equations', 'Matrices']
+  Level 3 areas for Operations research: ['Activity analysis', 'Control systems', 'Dynamic programming', 'Non-linear programming', 'Systems formulation', 'Systems reliability']
+  Level 3 areas for Statistics: ['Data analysis', 'Decision procedures and theory', 'Design and analysis of experiment', 'Multivariate analysis', 'Techniques of statistical prediction', 'Techniques of statistical association']
+  Final UNESCO keywords: Thermochemistry, Thermodynamic relationships, Materials technology, Air pollution control, Inorganic chemistry, Phase equilibria, Chemical processes, Solid state chemistry
+........UNESCO keywords generated
+✅✅.................Abstract written
+✅✅...............Captions generated
+✅................Figures generated
+✅.............Introduction written
+✅..................Methods written
+✅..................Results written
+✅..............Conclusions written
+Compiling paper_v1_preliminary...✅✅
+✅..........Refined results written
+Compiling paper_v2_no_citations..✅✅
+Paper written in 4 min 41 sec.
+Cost: $0.384

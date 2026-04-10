@@ -1,0 +1,51 @@
+\documentclass[]{article}
+
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{natbib}
+\usepackage{graphicx} 
+
+
+\begin{document}
+
+\subsection{Dataset and candidate selection}
+The computational screening was performed using crystal structures and formation energies derived from the Materials Project database. To ensure that all candidate materials are either thermodynamically stable or synthetically accessible, the initial dataset was filtered to include only entries with an energy above the convex hull of stability less than or equal to 0.1 eV/atom. 
+
+From this filtered set, we systematically identified potential carbonation reactions by stoichiometrically parsing the chemical formulas of all oxides and carbonates. A custom algorithm was developed to match oxide precursors with their corresponding carbonate products, ensuring that the metal cation stoichiometry was identical for each reaction pair. This process yielded a comprehensive set of 889 unique oxide-carbonate reaction pairs, representing the chemical space for the general carbonation reaction:
+\begin{equation}
+    M_xO_y + zCO_2 \rightarrow M_x(CO_3)_zO_y
+\end{equation}
+where $M_xO_y$ is the metal oxide sorbent and $M_x(CO_3)_zO_y$ is its carbonated form. All subsequent analyses were performed on these 889 reaction pairs.
+
+\subsection{Thermodynamic analysis}
+The thermodynamic viability of each carbonation reaction was assessed by calculating the Gibbs free energy of reaction, $\Delta G$, at standard flue gas conditions (T = 700 K, $P_{CO_2}$ = 0.15 bar). The Gibbs free energy was calculated using the fundamental thermodynamic relation:
+\begin{equation}
+    \Delta G(T, P) = \Delta H - T\Delta S
+\end{equation}
+The reaction enthalpy, $\Delta H$, was approximated using the 0 K formation energies ($\Delta E$) computed via Density Functional Theory (DFT) as provided in the Materials Project:
+\begin{equation}
+    \Delta H \approx \Delta E = E_{\text{carbonate}} - E_{\text{oxide}} - E_{CO_2}
+\end{equation}
+To maintain consistency with the DFT energy scale of the solid phases, a reference energy of -3.94 eV was used for the gas-phase $CO_2$ molecule.
+
+The reaction entropy, $\Delta S$, was calculated as the difference between the entropies of the products and reactants. The entropy change of the solid phases, $\Delta S_{solid} = S_{carbonate} - S_{oxide}$, was approximated using the Dulong-Petit limit, which assumes a constant heat capacity at high temperatures. The entropy of gaseous $CO_2$ was taken from standard thermodynamic tables and adjusted to reflect the partial pressure of 0.15 bar at 700 K. The equilibrium temperature, $T_{eq}$, for each reaction was determined as the temperature at which $\Delta G = 0$, approximated by $T_{eq} \approx \Delta H / \Delta S$.
+
+\subsection{Mechanical and thermal stability metrics}
+To evaluate the long-term durability of the sorbents, we quantified two critical failure modes: mechanical degradation due to volume change and thermal degradation due to sintering.
+
+The mechanical stability was assessed by calculating the percentage volumetric expansion ($\Delta V$) upon carbonation. Using the equilibrium crystal structure volumes ($V$) from the database, the expansion was defined as:
+\begin{equation}
+    \Delta V (\%) = \frac{V_{\text{carbonate}} - V_{\text{oxide}}}{V_{\text{oxide}}} \times 100\%
+\end{equation}
+This metric serves as a direct proxy for the mechanical stress induced during the solid-state transformation, with lower values indicating higher resistance to particle fracture and decrepitation.
+
+Resistance to thermal sintering was estimated using the Tamman temperature ($T_T$), which approximates the onset of significant lattice diffusion and particle agglomeration. The Tamman temperature was calculated as half of the material's melting point, $T_T \approx 0.5 \times T_{melt}$. As experimental melting points are unavailable for many of the screened compounds, $T_{melt}$ was estimated for each oxide using an empirical regression model based on its DFT-calculated cohesive energy and the number of atoms in the unit cell. An "operating margin" was then defined as the difference between the Tamman temperature and the target operating temperature of 700 K, with a larger margin indicating greater resistance to sintering-induced degradation.
+
+\subsection{Isostructural substitution analysis}
+To derive rational design principles for tuning sorbent thermodynamics, we performed an isostructural substitution analysis. The well-characterized CaO (Fm-3m) $\rightarrow$ CaCO$_3$ (R-3c) and MgO (Fm-3m) $\rightarrow$ MgCO$_3$ (R-3c) reactions were used as structural templates. We identified all other reaction pairs in our dataset that shared these exact oxide and carbonate space groups, allowing for a direct comparison of the effect of cation substitution independent of crystallographic changes. For each substituted pair, we calculated the shift in reaction enthalpy ($\Delta H_{shift}$) and equilibrium temperature ($T_{eq}$) relative to the benchmark system to quantify the thermodynamic impact of altering the primary metal cation.
+
+\subsection{Composite scoring and candidate ranking}
+To identify the most promising overall candidates, a composite performance score was calculated for each of the 889 reaction pairs. This score integrated the three primary performance metrics: thermodynamic reversibility, mechanical stability, and thermal stability. Each metric was first normalized to a common scale. The Gibbs free energy ($\Delta G$) was normalized such that values closest to zero received the highest score. The volumetric expansion ($\Delta V$) was normalized to penalize large changes. The Tamman operating margin was normalized to reward higher values. The final composite score was an equally weighted sum of these three normalized metrics, providing a single, holistic figure of merit to rank all materials and identify top candidates that optimally balance the competing requirements for an ideal solid sorbent.
+
+\end{document}
+                

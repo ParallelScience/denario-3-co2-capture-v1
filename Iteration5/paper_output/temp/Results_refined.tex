@@ -1,0 +1,49 @@
+\documentclass[]{article}
+
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{natbib}
+\usepackage{graphicx} 
+
+
+\begin{document}
+
+Our high-throughput screening pipeline evaluated 889 unique oxide-carbonate reaction pairs, filtered for thermodynamic stability, to identify materials that optimally balance the competing requirements for an ideal CO₂ sorbent. The analysis systematically quantified the thermodynamic driving force for capture, the mechanical strain from volume expansion, and the thermal resistance to sintering. The results reveal clear structure-property relationships and identify a new class of complex oxide materials that overcome the limitations of simple binary oxides.
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=\textwidth]{../input_files/plots/step_6_multi_panel_analysis_1_1775790796.png}
+    \caption{Multifaceted screening of CO₂ sorbent properties. (Top-left) A Pareto analysis of Gibbs free energy ($\Delta$G) versus volume expansion ($\Delta$V) at 700 K demonstrates that most materials are poor sorbents due to extreme thermodynamics or catastrophic volume expansion (> 20\%), isolating a few promising candidates in the optimal region near $\Delta G = 0$ and low $\Delta V$. (Top-right) Box plots of reaction enthalpy ($\Delta$H) show that alkali and alkaline earth metals (e.g., K, Na) are highly exothermic and non-regenerable, while mixed-metal polyanionic systems (e.g., Li-P-V, Fe-Li-P) exhibit the moderate thermodynamics ideal for reversible cycling. (Bottom-left) The distribution of the Tamman temperature operating margin reveals that many candidates possess high thermal stability and resistance to sintering. (Bottom-right) Isostructural substitution analysis establishes a design rule where cation substitution systematically tunes reaction enthalpy, with less electropositive metals like Ni and Co destabilizing the carbonate and lowering the regeneration energy.}
+    \label{fig:pareto_and_distributions}
+\end{figure*}
+
+\subsection{A multi-property performance landscape}
+The overall performance landscape of the 889 candidates is summarized in Figure \ref{fig:pareto_and_distributions}. The Pareto plot of Gibbs free energy ($\Delta G$) versus volume expansion ($\Delta V$) at 700 K (top-left panel) immediately highlights the central challenge: most materials are unsuitable due to either extreme thermodynamics or catastrophic volume changes. The ideal sorbent must occupy the small "optimal region" near $\Delta G = 0$ eV for efficient, reversible cycling and low $\Delta V$ for mechanical stability.
+
+The underlying thermodynamic trends are detailed in the top-right panel of Figure \ref{fig:pareto_and_distributions}. Reaction enthalpies ($\Delta H$) cluster strongly by the primary metal cation. Alkali and alkaline earth metals (e.g., K, Na, Ba) exhibit highly exothermic reactions (mean $\Delta H$ of -4.22, -4.20, and -3.69 eV/CO₂, respectively), leading to excessively stable carbonates that are non-regenerable. Conversely, many transition metal oxides, like those of iron, are non-spontaneous (mean $\Delta G$ of +0.101 eV) under flue gas conditions. The most promising materials are mixed-metal polyanionic systems (e.g., Li-P-V, Li-Mn-P), which occupy an intermediate "Goldilocks" window with mean $\Delta G$ values of -0.329 eV and -0.475 eV, respectively, ideal for reversible cycling.
+
+Long-term durability requires resistance to thermal sintering, which we assessed using the Tamman temperature ($T_T$) operating margin ($T_T - 700$ K). The distribution in the bottom-left panel of Figure \ref{fig:pareto_and_distributions} shows that many complex oxides are highly robust. The calcium phosphate system (Ca₁₀P₆O₂₅) is a standout with a margin of 1028.9 K, while candidates like potassium titanium phosphate (KTiPO₅) also show excellent stability (margin > 950 K). This suggests that rigid polyhedral units (e.g., PO₄, TiO₆) enhance lattice cohesion and prevent thermal degradation.
+
+To establish rational design principles, we analyzed the effect of isostructural cation substitution on reaction thermodynamics, shown in the bottom-right panel of Figure \ref{fig:pareto_and_distributions}. Using the CaO $\rightarrow$ CaCO₃ reaction as a template, we found a clear trend: substituting Ca with more electropositive metals (e.g., Sr, Ba) makes the reaction more exothermic, while substitution with less electropositive transition metals (e.g., Mn, Co, Ni) systematically destabilizes the carbonate. This provides a powerful predictive rule: the M-O bond covalency can be used to fine-tune the thermodynamics for optimal performance.
+
+\subsection{Volumetric expansion as a critical failure mode}
+A primary mechanism for the mechanical failure of solid sorbents is the stress induced by volume changes during carbonation and decarbonation cycles. Our analysis reveals this is a dominant and often disqualifying factor. Figure \ref{fig:volume_expansion} shows the distribution of molar volume expansion ($\Delta V$) for all 889 reaction pairs. The distribution is heavily right-skewed, with a mean expansion of 74.85\% and some materials expanding by over 200\%. Such large, repeated structural changes lead to particle pulverization, loss of surface area, and a rapid decline in CO₂ capture capacity.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.5\textwidth]{../input_files/plots/step_3_volume_expansion_histogram_1775790499.png}
+    \caption{Distribution of the molar volume expansion ($\Delta$V) upon carbonation for the 889 screened reaction pairs. The histogram reveals a heavily right-skewed distribution with a mean expansion of 74.85\%, indicating that most materials undergo significant structural swelling detrimental to mechanical integrity. The red dashed lines highlight the strict mechanical robustness filter applied ($|\Delta V| \leq 20\%$), visually demonstrating the rarity of dimensionally stable candidates, with only 14 reactions meeting this criterion.}
+    \label{fig:volume_expansion}
+\end{figure}
+
+To identify mechanically robust candidates, we applied a stringent filter, retaining only materials with an absolute volume change of 20\% or less. As highlighted in Figure \ref{fig:volume_expansion}, this filter drastically reduces the candidate pool to just 14 reaction pairs, underscoring the rarity of dimensionally stable sorbents. This is also evident in the Pareto plot (Figure \ref{fig:pareto_and_distributions}, top-left), where the vast majority of materials lie outside the desired low-$\Delta V$ region. The materials that satisfy this criterion are predominantly complex, open-framework structures. For instance, the sodium aluminosilicate system (Na₈Al₆Si₆O₂₅) exhibits a near-zero volume change (-0.77\% to 1.17\%), as CO₂ can be accommodated within its existing microporous structure. Similarly, the calcium phosphate system (Ca₁₀P₆O₂₅) shows a minimal expansion of $\sim$1.9\%. These results pinpoint open-framework polyanionic structures as a key motif for designing mechanically durable sorbents.
+
+\subsection{Composite ranking and promising polyanionic sorbents}
+To identify the most promising candidates overall, we integrated the key performance metrics—thermodynamic reversibility ($\Delta G$), mechanical stability ($\Delta V$), and thermal durability (Tamman margin)—into a single composite score. This holistic ranking moves the focus from materials that excel in one property to those that strike an optimal balance among all three.
+
+The top-ranked candidates are overwhelmingly complex, mixed-metal polyanionic frameworks, representing a significant departure from traditional simple oxides. The highest-scoring material is sodium titanium phosphate (NaTiPO₅), which exhibits a nearly ideal $\Delta G$ of +0.010 eV at 700 K, a moderate volume expansion of 47.8\%, and an exceptional thermal operating margin of 934.2 K. Closely following is potassium titanium phosphate (KTiPO₅), with a $\Delta G$ of -0.003 eV and a margin of 958.3 K. Other promising candidates include lithium vanadium phosphates (e.g., LiVPO₅) and silicates (e.g., Li₂VSiO₅), which also balance near-zero $\Delta G$ values with manageable volume expansions (30-45\%) and high thermal stability.
+
+As visualized in the Pareto plot (Figure \ref{fig:pareto_and_distributions}, top-left), these top candidates occupy the coveted region of near-zero $\Delta G$ and low-to-moderate $\Delta V$. Unlike CaO, which is thermodynamically robust but requires very high regeneration temperatures and suffers from sintering, these polyanionic materials are predicted to cycle reversibly at lower temperatures while resisting both mechanical and thermal degradation. Their discovery provides a data-driven roadmap for the experimental development of a new generation of durable, high-performance solid sorbents for industrial CO₂ capture.
+
+\end{document}
+                
