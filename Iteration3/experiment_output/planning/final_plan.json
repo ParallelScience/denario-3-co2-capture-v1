@@ -1,0 +1,59 @@
+{
+    "sub_tasks": [
+        {
+            "bullet_points": [
+                "Load the parquet dataset.",
+                "Print key dataset statistics: total entries, number of carbonates vs. oxides, number of unique formulas before and after polymorph selection, and the distribution of energy_above_hull.",
+                "Group entries by formula and select the polymorph with the minimum energy_above_hull for each unique formula.",
+                "Save the cleaned, representative dataset to a new file for downstream analysis."
+            ],
+            "sub_task": "Data Preprocessing and Polymorph Selection",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Parse chemical formulas to identify metal-oxide precursors and carbonate products.",
+                "Match oxide-carbonate pairs based on metal composition (e.g., M_xO_y + CO_2 -> M_xCO_3).",
+                "Calculate the reaction energy ΔE = E(M_xCO_3) - E(M_xO_y) - E(CO_2) on a per-formula-unit basis.",
+                "Convert formation_energy_per_atom to total formation energy by multiplying by nsites.",
+                "Use E(CO_2) = -11.17 eV (per formula unit).",
+                "Filter for thermodynamic accessibility (hull ≤ 0.1 eV/atom for all phases).",
+                "Print a summary table of the number of matched oxide-carbonate pairs per capture element (Ca, Mg, Li, Na, K, Ba, Sr, Mn, Fe, Co, Ni, Cu, Zn, Al) and the mean/min/max ΔE per element family."
+            ],
+            "sub_task": "Stoichiometric Reaction Mapping and Energy Calculation",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Estimate entropy changes using the Dulong-Petit limit (S ≈ 3R per atom, R = 8.314 J/mol·K) for solids and S(CO_2) = 213.8 J/mol·K.",
+                "Calculate regeneration temperatures (T_reg = ΔH / ΔS, with ΔH ≈ ΔE).",
+                "Compute volume expansion ratios (ΔV / V_oxide).",
+                "Compute the hysteresis energy metric (absolute difference between carbonation and decomposition energies) and flag pairs exceeding 0.5 eV.",
+                "Apply electronic filtering (band_gap > 0.5 eV).",
+                "Print T_reg distribution statistics (mean, median, 10th and 90th percentiles) broken down by metal family.",
+                "Save the final candidate list with calculated metrics."
+            ],
+            "sub_task": "Thermodynamic and Structural Feasibility Analysis",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Generate a scatter plot of ΔE vs. T_reg, colored by crystal system.",
+                "Create a Pareto-front plot in the 2D space of ΔE vs. volume expansion ratio, highlighting Pareto-optimal candidates.",
+                "Create a box plot of ΔE distributions grouped by capture element family.",
+                "Produce and print a ranked table of the top 20 Pareto-optimal candidates (by ΔE, T_reg, and volume expansion ratio).",
+                "Save all plots to the designated directory."
+            ],
+            "sub_task": "Visualization of the Thermodynamic Landscape",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Write a complete Results section structured with subsections: (1) dataset statistics and polymorph selection outcomes, (2) oxide-carbonate pairing statistics and ΔE landscape by metal family, (3) entropy, T_reg, and hysteresis analysis, (4) structural feasibility via volume expansion and electronic filtering, and (5) Pareto-optimal candidate identification.",
+                "Reference all quantitative outputs and plot filenames from prior steps to synthesize a formal report on promising materials for industrial CO₂ capture."
+            ],
+            "sub_task": "Results Synthesis and Reporting",
+            "sub_task_agent": "researcher"
+        }
+    ]
+}
