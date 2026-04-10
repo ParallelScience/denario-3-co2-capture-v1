@@ -1,0 +1,70 @@
+{
+    "sub_tasks": [
+        {
+            "bullet_points": [
+                "Load the dataset and parse chemical formulas to extract metal-to-oxygen ratios.",
+                "Identify stoichiometric pairs of oxide precursors and carbonate products, retaining all distinct polymorph pairs and flagging them with a polymorph count.",
+                "Filter pairs to ensure both oxide and carbonate are within the 0.1 eV/atom energy above hull threshold.",
+                "Produce a summary visualization (bar chart) of matched pairs per capture element and print key statistics (total pairs, pairs per element, energy-above-hull distributions).",
+                "Save the resulting matched pairs dataset."
+            ],
+            "sub_task": "Stoichiometric parsing and reaction mapping",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Calculate reaction enthalpy (ΔH) at 0 K using the reference energy for CO₂ (-11.17 eV/formula unit).",
+                "Estimate Debye temperature (Θ_D) using the Lindemann criterion (molar mass from formula, volume per atom, and density).",
+                "Calculate Gibbs free energy (ΔG) at 700 K and 0.15 bar CO₂ partial pressure, including vibrational entropy and fixed CO₂ gas-phase entropy (0.00269 eV/K).",
+                "Print mean, median, and range of ΔH and ΔG per capture element family.",
+                "Generate a multi-panel box plot showing distributions of ΔH and ΔG per capture element.",
+                "Save the calculated thermodynamic properties."
+            ],
+            "sub_task": "Thermodynamic landscape calculation",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Calculate molar volume change (ΔV) for each reaction pair.",
+                "Apply a filter to exclude candidates with |ΔV| > 20%.",
+                "Calculate the cohesive energy proxy for the remaining candidates.",
+                "Print a summary table of candidates surviving the ΔV filter per capture element.",
+                "Generate a scatter plot of ΔV (%) vs. ΔG for all pairs, marking the 20% threshold.",
+                "Save the filtered dataset."
+            ],
+            "sub_task": "Mechanical integrity and stability filtering",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Train a Random Forest classifier to predict `is_stable` status; print cross-validated ROC-AUC, precision, recall, and F1 score.",
+                "Generate a feature importance bar chart for the classifier.",
+                "Perform sensitivity analysis on the top 10 \"Goldilocks\" candidates by varying CO₂ partial pressure (0.05 to 0.5 bar).",
+                "Generate a line plot of ΔG vs. CO₂ partial pressure for these candidates.",
+                "Save model metrics and sensitivity results."
+            ],
+            "sub_task": "Stability prediction and sensitivity analysis",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Construct a 2D Pareto front plot of ΔG (at 700 K) vs. cohesive energy proxy, annotating the top 10 Pareto-optimal candidates.",
+                "Rank candidates based on proximity to the \"optimal-delta\" zone.",
+                "Print a ranked table of the top 20 candidates (formula, ID, element, ΔG, ΔV, cohesive energy, stability, crystal system).",
+                "Save the Pareto plot and the final ranked list."
+            ],
+            "sub_task": "Pareto ranking and visualization",
+            "sub_task_agent": "engineer"
+        },
+        {
+            "bullet_points": [
+                "Write the final Results section of the report, structured by analysis step (Reaction Mapping, Thermodynamic Landscape, Mechanical Filtering, Stability Prediction, Sensitivity Analysis, Pareto Ranking).",
+                "Explicitly reference all quantitative results (e.g., number of pairs, classifier AUC, top ΔG values) and plots generated in previous steps.",
+                "Discuss elemental family trends, the impact of mechanical constraints, and implications for industrial CO₂ capture.",
+                "Ensure the report is self-contained and suitable for direct inclusion in a scientific paper."
+            ],
+            "sub_task": "Results synthesis and reporting",
+            "sub_task_agent": "researcher"
+        }
+    ]
+}
