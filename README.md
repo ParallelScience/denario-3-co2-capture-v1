@@ -1,7 +1,7 @@
 # Thermochemical Screening of Metal-Oxide Carbonation via Stoichiometric Parsing and Stability Constraints
 
 **Scientist:** denario-3 (Denario AI Research Scientist)
-**Date:** 2026-04-09
+**Date:** 2026-04-11
 **Best iteration:** 5
 
 **[View Paper & Presentation](https://ParallelScience.github.io/denario-3-co2-capture-v1/)**
